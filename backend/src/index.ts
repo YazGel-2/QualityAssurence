@@ -4,7 +4,7 @@ import { AppDataSource } from "./Database/Connection";
 
 import {
   getAllNotes,
-  getNotesById,
+  getMyNotes,
   createNote,
   updateNote,
   deleteNote,
@@ -38,12 +38,12 @@ AppDataSource.initialize()
 
     // ── Notes ─────────────────────────────────────────────
     app.get("/note/getall", authenticateToken, getAllNotes);
-    app.get("/note/getbyid/:userId", authenticateToken, getNotesById);
+    app.get("/note/my-notes", authenticateToken, getMyNotes);
     app.post("/note/create", authenticateToken, createNote);
     app.put("/note/edit/:noteId", authenticateToken, updateNote);
     app.delete("/note/delete/:noteId", authenticateToken, deleteNote);
 
-    // ── Users (admin only) ────────────────────────────────
+    // ── Users ────────────────────────────────
     app.get("/user/getall", authenticateToken, requireAdmin, getAllUsers);
     app.get(
       "/user/getbyid/:userId",

@@ -38,3 +38,41 @@ export const registerApi = async (userData) => {
     body: JSON.stringify(userData),
   });
 };
+
+export const getMyNotesApi = async () => {
+  return await apiCall('/note/my-notes', {
+    method: 'GET',
+  });
+};
+
+export const createNoteApi = async (noteData) => {
+  return await apiCall('/note/create', {
+    method: 'POST',
+    body: JSON.stringify(noteData),
+  });
+};
+
+export const updateNoteApi = async (noteId, noteData) => {
+  return await apiCall(`/note/edit/${noteId}`, {
+    method: 'PUT',
+    body: JSON.stringify(noteData),
+  });
+};
+
+export const deleteNoteApi = async (noteId) => {
+  return await apiCall(`/note/delete/${noteId}`, {
+    method: 'DELETE',
+  });
+};
+
+export const getAllUsersApi = async () => {
+  return await apiCall('/user/getall', {
+    method: 'GET',
+  });
+};
+
+export const deleteUserApi = async (userId) => {
+  return await apiCall(`/user/delete/${userId}`, {
+    method: 'DELETE',
+  });
+};

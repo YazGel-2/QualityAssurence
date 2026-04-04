@@ -16,25 +16,19 @@ export const getAllNotes = async (req: Request,res: Response) =>
     }
 };
 
-export const getNotesById = async (req: Request,res: Response) => 
+export const getMyNotes = async (req: Request, res: Response) => 
 {
     const db = AppDataSource.manager;
-    const userId = req.params.userId;
+    const user = (req as any).user;
 
-    if (!userId) 
+    if (!user || !user.userId) 
     {
-        return res.status(400).json({ error: "User ID is required" });
+        return res.status(401).json({ error: "Unauthorized" });
     }
 
     try 
     {
-        const notes = await db.query("SELECT * FROM note WHERE userId = ?", [userId]);
-
-        if (notes.length === 0) 
-        {
-            return res.status(404).json({ error: "No notes found for this user" });
-        }
-
+        const notes = await db.query("SELECT * FROM note WHERE userId = ?", [user.userId]);
         res.status(200).json({ data: notes });
     } 
     catch (error) 
@@ -46,16 +40,25 @@ export const getNotesById = async (req: Request,res: Response) =>
 export const createNote = async (req: Request, res: Response) => 
 {
     const db = AppDataSource.manager;
-    const { title, content, userId } = req.body;
+    const { title, content } = req.body;
+    const user = (req as any).user;
 
-    if (!title || !content || !userId) 
+    if (!title || !content) 
     {
-        return res.status(400).json({ error: "Title, content and userId are required" });
+        return res.status(400).json({ error: "Title and content are required" });
+    }
+
+    if (!user || !user.userId) 
+    {
+        return res.status(401).json({ error: "Unauthorized" });
     }
 
     try 
     {
-        const result = await db.query("INSERT INTO note (title, content, userId) VALUES (?, ?, ?)",[title, content, userId]);
+        const result = await db.query(
+            "INSERT INTO note (title, content, userId) VALUES (?, ?, ?)",
+            [title, content, user.userId]
+        );
         res.status(201).json({ message: "Note created successfully", noteId: result.insertId });
     } 
     catch (error) 
