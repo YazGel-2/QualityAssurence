@@ -22,8 +22,12 @@ import { register, login, me } from "./Controllers/AuthController";
 
 import { authenticateToken, requireAdmin } from "./Middlewares/AuthMiddleware";
 
+import cors from 'cors';
+
 const app = express();
 app.use(express.json());
+
+app.use(cors());
 
 AppDataSource.initialize()
   .then(() => {
