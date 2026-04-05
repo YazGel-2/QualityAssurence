@@ -62,7 +62,7 @@ describe('updateNote — Hata Durumu', () => {
 // ─── 4. Servis Mantığı — Başarılı Create ──────────────────────────────────────
 describe('createNote — Servis Mantığı', () => {
     it('geçerli verilerle çağrıldığında insertId\'yi döndürmeli', async () => {
-        mockQuery.mockResolvedValue({ insertId: 42 });
+        mockQuery.mockResolvedValue(42);
 
         const result = await NoteService.createNote('Test Başlık', 'Test İçerik', 7);
 
