@@ -24,6 +24,10 @@ export const getNoteById = async (req: Request,res: Response) =>
     } 
     catch (error) 
     {
+        if (error instanceof AppError) 
+        {
+            return res.status(error.status).json({ error: error.message });
+        }
         console.error('Failed to fetch notes:', error);
         res.status(500).json({ error: 'Failed to fetch notes' });
     }
