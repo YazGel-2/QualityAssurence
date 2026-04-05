@@ -84,7 +84,7 @@ export const login = async (req: Request, res: Response) =>
                 userId: user.id, 
                 role:   user.role 
             },
-            JWT_SECRET,
+            process.env.JWT_SECRET as string,
             { expiresIn: JWT_EXPIRES_IN }
         );
 

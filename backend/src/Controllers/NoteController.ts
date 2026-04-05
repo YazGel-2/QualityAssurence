@@ -16,6 +16,26 @@ export const getAllNotes = async (req: Request,res: Response) =>
     }
 };
 
+export const getNoteById = async (req: Request,res: Response) => 
+{
+    const db = AppDataSource.manager;
+    const noteId = req.params.noteId;
+    try
+    {
+        const notes = await db.query('SELECT * FROM note WHERE id = ?', [noteId]);
+        if (notes.length === 0)
+        {
+            return res.status(404).json({ error: 'Note not found' });
+        }
+        res.status(200).json(notes[0]);
+    } 
+    catch (error) 
+    {
+        console.error('Failed to fetch notes:', error);
+        res.status(500).json({ error: 'Failed to fetch notes' });
+    }
+};
+
 export const getMyNotes = async (req: Request, res: Response) => 
 {
     const db = AppDataSource.manager;
@@ -59,7 +79,8 @@ export const createNote = async (req: Request, res: Response) =>
             "INSERT INTO note (title, content, userId) VALUES (?, ?, ?)",
             [title, content, user.userId]
         );
-        res.status(201).json({ message: "Note created successfully", noteId: result.insertId });
+        console.log('Insert result:', result);
+        res.status(201).json({ message: "Note created successfully", noteId: result });
     } 
     catch (error) 
     {
@@ -115,7 +136,7 @@ export const deleteNote = async (req: Request, res: Response) =>
             return res.status(404).json({ error: "Note not found" });
         }
 
-        res.status(200).json({ message: "Note deleted successfully" });
+        res.status(204).json({ message: "Note deleted successfully" });
     } 
     catch (error) 
     {

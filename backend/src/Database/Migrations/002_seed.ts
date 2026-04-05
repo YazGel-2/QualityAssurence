@@ -34,3 +34,5 @@ export class SeedData1710000000001 implements MigrationInterface {
     await queryRunner.query(`DELETE FROM user`);
   }
 }
+
+module.exports = SeedData1710000000001;
