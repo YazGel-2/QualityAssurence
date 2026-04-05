@@ -13,8 +13,21 @@ export const getAllNotes = async () => {
     return notes;
 };
 
+export const getNoteById = async (noteId: string | string[]) => 
+{
+    const db = AppDataSource.manager;
+
+    const notes = await db.query('SELECT * FROM note WHERE id = ?', [noteId]);
+    if (notes.length === 0)
+    {
+        throw new AppError(404, "Note not found");
+    }
+    return notes[0];
+};
+
 export const getMyNotes = async (userId: number) => {
-    if (!userId) {
+    if (!userId) 
+    {
         throw new AppError(401, "Unauthorized");
     }
 
@@ -24,11 +37,13 @@ export const getMyNotes = async (userId: number) => {
 };
 
 export const createNote = async (title: string, content: string, userId: number) => {
-    if (!title || !content) {
+    if (!title || !content) 
+    {
         throw new AppError(400, "Title and content are required");
     }
 
-    if (!userId) {
+    if (!userId) 
+    {
         throw new AppError(401, "Unauthorized");
     }
 
@@ -38,7 +53,7 @@ export const createNote = async (title: string, content: string, userId: number)
         [title, content, userId]
     );
 
-    return { noteId: result.insertId };
+    return { noteId: result };
 };
 
 export const updateNote = async (noteId: string, title?: string, content?: string) => {

@@ -27,3 +27,5 @@ export class InitTables1710000000000 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE user`);
   }
 }
+
+module.exports = InitTables1710000000000;

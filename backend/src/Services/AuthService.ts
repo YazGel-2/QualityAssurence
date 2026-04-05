@@ -2,7 +2,6 @@ import { AppDataSource } from "../Database/Connection";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET    = process.env.JWT_SECRET as string;
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN ?? '1d') as jwt.SignOptions['expiresIn'];
 
 export class AppError extends Error {
@@ -35,11 +34,12 @@ export const registerUser = async (username: string, password: string) => {
         [username, hashedPassword, 'user']
     );
 
-    return { userId: result.insertId };
+    return { userId: result };
 };
 
 export const loginUser = async (username: string, password: string) => {
-    if (!username || !password) {
+    if (!username || !password) 
+    {
         throw new AppError(400, "Username and password are required");
     }
 
@@ -64,7 +64,7 @@ export const loginUser = async (username: string, password: string) => {
 
     const token = jwt.sign(
         { userId: user.id, role: user.role },
-        JWT_SECRET,
+        process.env.JWT_SECRET as string,
         { expiresIn: JWT_EXPIRES_IN }
     );
 

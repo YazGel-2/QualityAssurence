@@ -18,11 +18,15 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     const { username, password } = req.body;
-    try {
+    try 
+    {
         const result = await AuthService.loginUser(username, password);
         res.status(200).json({ message: "Login successful", token: result.token });
-    } catch (error) {
-        if (error instanceof AppError) {
+    } 
+    catch (error) 
+    {
+        if (error instanceof AppError) 
+        {
             return res.status(error.status).json({ error: error.message });
         }
         console.error('Login failed:', error);
