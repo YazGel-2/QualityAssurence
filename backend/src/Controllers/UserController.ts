@@ -12,7 +12,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 export const getUserById = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const userId = req.params.userId as string;
     try {
         const user = await UserService.getUserById(userId);
         res.status(200).json({ data: user });
@@ -38,7 +38,7 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const userId = req.params.userId as string;
     const { username, password, role } = req.body;
     try {
         await UserService.updateUser(userId, username, password, role);
@@ -52,7 +52,7 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const userId = req.params.userId as string;
     try {
         await UserService.deleteUser(userId);
         res.status(200).json({ message: "User deleted successfully" });

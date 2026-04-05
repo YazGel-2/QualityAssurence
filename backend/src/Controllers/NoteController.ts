@@ -39,7 +39,7 @@ export const createNote = async (req: Request, res: Response) => {
 };
 
 export const updateNote = async (req: Request, res: Response) => {
-    const noteId = req.params.noteId;
+    const noteId = req.params.noteId as string;
     const { title, content } = req.body;
     try {
         await NoteService.updateNote(noteId, title, content);
@@ -53,7 +53,7 @@ export const updateNote = async (req: Request, res: Response) => {
 };
 
 export const deleteNote = async (req: Request, res: Response) => {
-    const noteId = req.params.noteId;
+    const noteId = req.params.noteId as string;
     try {
         await NoteService.deleteNote(noteId);
         res.status(200).json({ message: "Note deleted successfully" });
