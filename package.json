@@ -12,6 +12,7 @@
     "quick-start": "npm run install:all && npm run migrate:backend && npm run dev:all"
   },
   "devDependencies": {
-    "concurrently": "^8.0.0"
+    "concurrently": "^8.0.0",
+    "sonar-scanner": "^3.1.0"
   }
 }
