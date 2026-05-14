@@ -8,6 +8,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
         res.status(200).json({ data: users });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch users' });
+        console.log('Failed to fetch users:', error);
     }
 };
 
