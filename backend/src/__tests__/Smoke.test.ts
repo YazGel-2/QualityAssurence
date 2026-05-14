@@ -20,7 +20,7 @@ let createdNoteId: number = 0;
 let createdUserId: number = 0;
 
 test("register with valid credentials", async () => {
-    let response = await request(app)
+    const response = await request(app)
         .post('/auth/register')
         .send({ username: 'testuser', password: 'testpass' });
     
@@ -30,7 +30,7 @@ test("register with valid credentials", async () => {
 });
 
 test("login with valid credentials", async () => {
-    let response = await request(app)
+    const response = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
 
@@ -40,7 +40,7 @@ test("login with valid credentials", async () => {
 });
 
 test("login with invalid credentials", async () => {
-    let response = await request(app)
+    const response = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'wrongpass' });
 
@@ -49,13 +49,13 @@ test("login with invalid credentials", async () => {
 
 
 test("create note with valid input", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
     console.log('Token:', token);
-    let response = await request(app)
+    const response = await request(app)
         .post('/note/create')
         .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Test Note', content: 'This is a test note.' });
@@ -69,12 +69,12 @@ test("create note with valid input", async () => {
 });
 
 test("create note with invalid input", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
-    let response = await request(app)
+    const response = await request(app)
         .post('/note/create')
         .set('Authorization', `Bearer ${token}`)
         .send({ title: '', content: '' });
@@ -84,12 +84,12 @@ test("create note with invalid input", async () => {
 
 
 test("get all notes", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
-    let response = await request(app)
+    const response = await request(app)
         .get('/note/getall')
         .set('Authorization', `Bearer ${token}`);
 
@@ -101,13 +101,13 @@ test("get all notes", async () => {
 
 
 test("get note by id", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
     console.log('Created Note ID for Get By ID Test:', createdNoteId);
-    let response = await request(app)
+    const response = await request(app)
         .get(`/note/getnotebyid/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
@@ -115,17 +115,17 @@ test("get note by id", async () => {
 });
 
 test("update note with valid input", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
-    let responseUpdate = await request(app)
+    const responseUpdate = await request(app)
         .put(`/note/edit/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Updated Title', content: 'Updated Content' });
 
-    let responseGet = await request(app)
+    const responseGet = await request(app)
         .get(`/note/getnotebyid/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
@@ -137,12 +137,12 @@ test("update note with valid input", async () => {
 
 
 test("update note with invalid input", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
-    let responseUpdate = await request(app)
+    const responseUpdate = await request(app)
         .put(`/note/edit/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`)
         .send({ title: '', content: '' });
@@ -152,16 +152,16 @@ test("update note with invalid input", async () => {
 
 
 test("delete note", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
-    let responseDelete = await request(app)
+    const responseDelete = await request(app)
         .delete(`/note/delete/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
-    let responseGet = await request(app)
+    const responseGet = await request(app)
         .get(`/note/getnotebyid/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
@@ -171,12 +171,12 @@ test("delete note", async () => {
 
 
 test("get all users with valid client_id", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'admin', password: '123456' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
-    let response = await request(app)
+    const response = await request(app)
         .get('/user/getall')
         .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
@@ -184,12 +184,12 @@ test("get all users with valid client_id", async () => {
 
 
 test("get all users with invalid client_id", async () => {
-    let loginRes = await request(app)
+    const loginRes = await request(app)
         .post('/auth/login')
         .send({ username: 'testuser', password: 'testpass' });
-    let token = loginRes.body.token;
+    const token = loginRes.body.token;
 
-    let response = await request(app)
+    const response = await request(app)
         .get('/user/getall')
         .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(403);
