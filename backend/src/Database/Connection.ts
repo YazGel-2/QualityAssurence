@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "../Models/User";
 import { Note } from "../Models/Note";
-import path from "path";
+import path from "node:path";
 
 const isTest = process.env.NODE_ENV === "test";
 
