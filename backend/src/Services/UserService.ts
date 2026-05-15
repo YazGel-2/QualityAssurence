@@ -32,12 +32,11 @@ export const getUserById = async (userId: string) => {
     return users[0];
 };
 
-export const createUser = async (username: string, password: string, role?: string) => {
+export const createUser = async (username: string, password: string, role: string = 'user') => {
     if (!username || !password) {
         throw new AppError(400, "Username and password are required");
     }
 
-    const userRole = role ?? 'user';
     const db = AppDataSource.manager;
 
     const existing = await db.query(
@@ -53,7 +52,7 @@ export const createUser = async (username: string, password: string, role?: stri
 
     const result = await db.query(
         "INSERT INTO user (username, password, role) VALUES (?, ?, ?)",
-        [username, hashedPassword, userRole]
+        [username, hashedPassword, role]
     );
 
     return { userId: result.insertId };
