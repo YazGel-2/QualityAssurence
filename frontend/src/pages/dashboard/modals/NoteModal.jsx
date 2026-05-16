@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const NoteModal = ({ isOpen, onClose, onSave, initialData }) => {
   const [title, setTitle] = useState('');
@@ -123,6 +124,16 @@ const styles = {
     cursor: 'pointer',
     fontWeight: '600',
   }
+};
+
+NoteModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  initialData: PropTypes.shape({
+    title: PropTypes.string,
+    content: PropTypes.string,
+  }),
 };
 
 export default NoteModal;

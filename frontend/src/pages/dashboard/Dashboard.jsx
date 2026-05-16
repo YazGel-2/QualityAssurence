@@ -13,12 +13,12 @@ import NoteModal from "./modals/NoteModal";
 const parseJwt = (token) => {
   try {
     const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const base64 = base64Url.replaceAll("-", "+").replaceAll("_", "/");
     const jsonPayload = decodeURIComponent(
       atob(base64)
         .split("")
         .map((c) => {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          return "%" + ("00" + c.codePointAt(0).toString(16)).slice(-2);
         })
         .join(""),
     );
@@ -101,7 +101,7 @@ const Dashboard = () => {
   };
 
   const handleDeleteNote = async (noteId) => {
-    if (window.confirm("Bu notu silmek istediğinize emin misiniz?")) {
+    if (globalThis.confirm("Bu notu silmek istediğinize emin misiniz?")) {
       try {
         await deleteNoteApi(noteId);
         fetchNotes();
@@ -126,7 +126,7 @@ const Dashboard = () => {
     if (userId === currentUser.userId) {
       return alert("Kendinizi silemezsiniz!");
     }
-    if (window.confirm("Bu kullanıcıyı silmek istediğinize emin misiniz?")) {
+    if (globalThis.confirm("Bu kullanıcıyı silmek istediğinize emin misiniz?")) {
       try {
         await deleteUserApi(userId);
         fetchUsers();
@@ -134,6 +134,90 @@ const Dashboard = () => {
         alert("Hata: " + err.message);
       }
     }
+  };
+
+  // --- NOT LİSTESİ RENDER ---
+  const renderNoteList = () => {
+    if (loading) {
+      return <p>Yükleniyor...</p>;
+    }
+    if (notes.length === 0) {
+      return <p style={styles.emptyText}>Henüz hiç notun yok.</p>;
+    }
+    return (
+      <div style={styles.grid}>
+        {notes.map((note) => (
+          <div key={note.id} style={styles.card}>
+            <h4 style={styles.cardTitle}>{note.title}</h4>
+            <p style={styles.cardContent}>{note.content}</p>
+            <div style={styles.actionButtons}>
+              <button
+                onClick={() => openModalForEdit(note)}
+                style={styles.editBtn}
+              >
+                Düzenle
+              </button>
+              <button
+                onClick={() => handleDeleteNote(note.id)}
+                style={styles.deleteBtn}
+              >
+                Sil
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // --- KULLANICI LİSTESİ RENDER ---
+  const renderUserList = () => {
+    if (loading) {
+      return <p>Yükleniyor...</p>;
+    }
+    return (
+      <div style={styles.tableContainer}>
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>ID</th>
+              <th style={styles.th}>Kullanıcı Adı</th>
+              <th style={styles.th}>Rol</th>
+              <th style={styles.th}>İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.id} style={styles.tr}>
+                <td style={styles.td}>{u.id}</td>
+                <td style={styles.td}>{u.username}</td>
+                <td style={styles.td}>
+                  <span
+                    style={
+                      u.role === "admin"
+                        ? styles.badgeAdmin
+                        : styles.badgeUser
+                    }
+                  >
+                    {u.role.toUpperCase()}
+                  </span>
+                </td>
+                <td style={styles.td}>
+                  {u.id !== currentUser.userId && (
+                    <button
+                      onClick={() => handleDeleteUser(u.id)}
+                      style={styles.deleteUserBtn}
+                    >
+                      Sil
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   };
 
   return (
@@ -174,34 +258,7 @@ const Dashboard = () => {
               </button>
             </div>
 
-            {loading ? (
-              <p>Yükleniyor...</p>
-            ) : notes.length === 0 ? (
-              <p style={styles.emptyText}>Henüz hiç notun yok.</p>
-            ) : (
-              <div style={styles.grid}>
-                {notes.map((note) => (
-                  <div key={note.id} style={styles.card}>
-                    <h4 style={styles.cardTitle}>{note.title}</h4>
-                    <p style={styles.cardContent}>{note.content}</p>
-                    <div style={styles.actionButtons}>
-                      <button
-                        onClick={() => openModalForEdit(note)}
-                        style={styles.editBtn}
-                      >
-                        Düzenle
-                      </button>
-                      <button
-                        onClick={() => handleDeleteNote(note.id)}
-                        style={styles.deleteBtn}
-                      >
-                        Sil
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            {renderNoteList()}
           </>
         )}
 
@@ -212,51 +269,7 @@ const Dashboard = () => {
               <h3 style={styles.subTitle}>Sistem Kullanıcıları</h3>
             </div>
 
-            {loading ? (
-              <p>Yükleniyor...</p>
-            ) : (
-              <div style={styles.tableContainer}>
-                <table style={styles.table}>
-                  <thead>
-                    <tr>
-                      <th style={styles.th}>ID</th>
-                      <th style={styles.th}>Kullanıcı Adı</th>
-                      <th style={styles.th}>Rol</th>
-                      <th style={styles.th}>İşlem</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((u) => (
-                      <tr key={u.id} style={styles.tr}>
-                        <td style={styles.td}>{u.id}</td>
-                        <td style={styles.td}>{u.username}</td>
-                        <td style={styles.td}>
-                          <span
-                            style={
-                              u.role === "admin"
-                                ? styles.badgeAdmin
-                                : styles.badgeUser
-                            }
-                          >
-                            {u.role.toUpperCase()}
-                          </span>
-                        </td>
-                        <td style={styles.td}>
-                          {u.id !== currentUser.userId && (
-                            <button
-                              onClick={() => handleDeleteUser(u.id)}
-                              style={styles.deleteUserBtn}
-                            >
-                              Sil
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            {renderUserList()}
           </>
         )}
       </div>

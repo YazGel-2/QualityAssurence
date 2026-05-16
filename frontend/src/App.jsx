@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -24,6 +25,14 @@ const PublicRoute = ({ children }) => {
   }
   
   return children;
+};
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+PublicRoute.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 function App() {

@@ -39,7 +39,7 @@ export const requireAdmin = (
 ) => {
     const user = (req as any).user as JwtPayload;
 
-    if (!user || user.role !== 'admin') 
+    if (user.role !== 'admin') 
     {
         return res.status(403).json({ error: "Admin access required" });
     }
