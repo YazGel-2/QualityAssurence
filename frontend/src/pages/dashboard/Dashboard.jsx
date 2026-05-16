@@ -24,6 +24,7 @@ const parseJwt = (token) => {
     );
     return JSON.parse(jsonPayload);
   } catch (e) {
+    console.log(e);
     return null;
   }
 };

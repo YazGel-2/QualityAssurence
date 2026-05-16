@@ -1,5 +1,3 @@
-import { AppError } from '../Services/NoteService';
-
 // DB mock'u — hiçbir testte gerçek sorgu atılmaz
 jest.mock('../Database/Connection', () => ({
     AppDataSource: {
