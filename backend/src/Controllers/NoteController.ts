@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as NoteService from '../Services/NoteService';
 import { AppError } from '../Services/NoteService';
+import { userRequest } from "../Models/userRequest"
 
 export const getAllNotes = async (req: Request, res: Response) => {
     try 
@@ -34,11 +35,11 @@ export const getNoteById = async (req: Request,res: Response) =>
     }
 };
 
-export const getMyNotes = async (req: Request, res: Response) => {
-    const user = (req as any).user;
+export const getMyNotes = async (req: userRequest, res: Response) => {
+    const user = req.user;
     try 
     {
-        const notes = await NoteService.getMyNotes(user?.userId);
+        const notes = await NoteService.getMyNotes(user!.userId);
         res.status(200).json({ data: notes });
     } 
     catch (error) 
@@ -51,12 +52,12 @@ export const getMyNotes = async (req: Request, res: Response) => {
     }
 };
 
-export const createNote = async (req: Request, res: Response) => {
+export const createNote = async (req: userRequest, res: Response) => {
     const { title, content } = req.body;
-    const user = (req as any).user;
+    const user = req.user;
     try 
     {
-        const result = await NoteService.createNote(title, content, user?.userId);
+        const result = await NoteService.createNote(title, content, user!.userId);
         res.status(201).json({ message: "Note created successfully", noteId: result.noteId });
     } 
     catch (error) 
