@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import * as NoteService from '../Services/NoteService';
 import { AppError } from '../Services/NoteService';
-import { userRequest } from "../Models/userRequest"
+import { UserRequest } from '../Models/userRequest';
+
 
 export const getAllNotes = async (req: Request, res: Response) => {
     try 
@@ -35,7 +36,7 @@ export const getNoteById = async (req: Request,res: Response) =>
     }
 };
 
-export const getMyNotes = async (req: userRequest, res: Response) => {
+export const getMyNotes = async (req: UserRequest, res: Response) => {
     const user = req.user;
     try 
     {
@@ -52,7 +53,7 @@ export const getMyNotes = async (req: userRequest, res: Response) => {
     }
 };
 
-export const createNote = async (req: userRequest, res: Response) => {
+export const createNote = async (req: UserRequest, res: Response) => {
     const { title, content } = req.body;
     const user = req.user;
     try 
